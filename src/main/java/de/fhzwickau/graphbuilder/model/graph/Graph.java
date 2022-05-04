@@ -86,13 +86,19 @@ public class Graph extends HashMap<String, Node> implements Serializable {
     }
 
     public void remove(Node node) {
-        remove(getKey(node));
+        if (contains(node)) {
+            for (String k : keySet()) {
+                if (get(k).equals(node))
+                    remove(k);
+
+                if (!contains(node))
+                    return;
+            }
+        }
     }
 
     public boolean contains(Node node) {
-        String key = getKey(node);
-
-        return containsKey(key) && get(key).equals(node);
+        return containsValue(node);
     }
 
 }

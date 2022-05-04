@@ -11,11 +11,14 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.*;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -45,6 +48,7 @@ public class GraphBuilderController {
     private Node modify;
     private Graph graph;
     private Map<Field, TextField> textFields = new HashMap<>();
+    private AutoCompletionBinding<String> autoCompletionBinding;
 
     @FXML
     private GridPane pane;
@@ -108,13 +112,14 @@ public class GraphBuilderController {
                 new Alert(Alert.AlertType.INFORMATION, NODE_ADDED).show();
             }
 
-
+            reloadExistingNodes();
+            modify = null;
+            loadFields(null);
         }
         else {
             new Alert(Alert.AlertType.WARNING, NO_NODE_WARNING).show();
         }
 
-        reloadExistingNodes();
     }
 
     /**
@@ -143,6 +148,8 @@ public class GraphBuilderController {
         else {
             new Alert(Alert.AlertType.ERROR, NODE_NOT_FOUND).show();
         }
+
+        searchBar.setText("");
     }
 
     @FXML
@@ -152,9 +159,13 @@ public class GraphBuilderController {
         if (node != null) {
             graph.remove(node);
 
-            new Alert(Alert.AlertType.CONFIRMATION, NODE_REMOVED).show();
+            if (!graph.contains(node)) {
+                new Alert(Alert.AlertType.CONFIRMATION, NODE_REMOVED).show();
+            }
         }
         else new Alert(Alert.AlertType.ERROR, NODE_NOT_FOUND).show();
+
+        searchBar.setText("");
 
         reloadExistingNodes();
     }
@@ -246,13 +257,20 @@ public class GraphBuilderController {
      * Die Nodes müssen zu {@link #graph} gehören.
      */
     private void reloadExistingNodes() {
-        nodeTableView.setItems(FXCollections.observableList(graph.values().stream().toList()));
-        try {
-            TextFields.bindAutoCompletion(searchBar, graph.keySet());
+        List<Node> values = new ArrayList<>();
+
+        for (Node node : graph.values()) {
+            values.add(node);
+            System.out.println(node.getId());
         }
-        catch (Exception ex) {
-            System.err.println("Cannot set autocompletion.");
-        }
+
+        nodeTableView.getItems().clear();
+        nodeTableView.setItems(FXCollections.observableList(values));
+
+        if (autoCompletionBinding != null)
+            autoCompletionBinding.dispose();
+
+        autoCompletionBinding = TextFields.bindAutoCompletion(searchBar, graph.keySet());
     }
 
     /**
@@ -301,7 +319,7 @@ public class GraphBuilderController {
         textFields.clear();
         int i = 0;
 
-        if (node instanceof LazyNode)
+        if (node == null || node instanceof LazyNode)
             return; // LazyNodes solen nur die ID der richtigen Nodes halten
 
         for (Field field : node.getClass().getDeclaredFields()) {
