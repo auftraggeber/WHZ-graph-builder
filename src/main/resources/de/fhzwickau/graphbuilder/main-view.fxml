@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -27,6 +28,8 @@
                     <buttons>
                         <TextField fx:id="searchBar" promptText="Knoten-ID" />
                         <Button mnemonicParsing="false" onAction="#loadNode" text="Bearbeiten" />
+                        <Button mnemonicParsing="false" onAction="#removeNode" text="Entfernen" />
+                        <Separator orientation="VERTICAL" />
                       <Button mnemonicParsing="false" onAction="#save" text="Sichern" />
                         <Button mnemonicParsing="false" onAction="#createNewNode" text="Neu" />
                     </buttons>

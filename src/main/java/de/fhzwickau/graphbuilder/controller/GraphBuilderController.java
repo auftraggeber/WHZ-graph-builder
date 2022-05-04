@@ -6,8 +6,6 @@ import de.fhzwickau.graphbuilder.model.graph.node.LazyNode;
 import de.fhzwickau.graphbuilder.model.graph.node.Node;
 import de.fhzwickau.graphbuilder.model.metadata.Metadata;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -35,7 +33,9 @@ public class GraphBuilderController {
             NODE_NOT_FOUND = "Es konnte kein Knoten mit dieser ID gefunden werden.",
             SAVED = "Die Daten konnten gespeichert werden.",
             SAVE_ERROR = "Es gab einen unerwarteten Fehler beim Speichern.",
-            LOADED = "Der Graph konnte geladen werden.";
+            LOADED = "Der Graph konnte geladen werden.",
+            NODE_REMOVED = "Der Knoten konnte entfernt werden.",
+            NODE_ALREADY_EXISTS = "Der Knoten existiert bereits.";
 
     private static final String CHOOSER_EXPORT_TITLE = "Exportieren",
     CHOOSER_IMPORT_TITLE = "Importieren";
@@ -99,11 +99,16 @@ public class GraphBuilderController {
                 }
             }
 
+            if (graph.contains(modify))
+                graph.remove(modify);
+
             graph.add(modify);
 
             if (graph.contains(modify)) {
                 new Alert(Alert.AlertType.INFORMATION, NODE_ADDED).show();
             }
+
+
         }
         else {
             new Alert(Alert.AlertType.WARNING, NO_NODE_WARNING).show();
@@ -128,16 +133,30 @@ public class GraphBuilderController {
      */
     @FXML
     private void loadNode() {
-        String searchForID = searchBar.getText();
+        Node node = getNodeFromSearchBar();
 
-        if (graph.containsKey(searchForID)) {
-            modify = graph.get(searchForID);
+        if (node != null) {
+            modify = node;
 
-            loadFields(modify);
+            loadFields(node);
         }
         else {
             new Alert(Alert.AlertType.ERROR, NODE_NOT_FOUND).show();
         }
+    }
+
+    @FXML
+    private void removeNode() {
+        Node node = getNodeFromSearchBar();
+
+        if (node != null) {
+            graph.remove(node);
+
+            new Alert(Alert.AlertType.CONFIRMATION, NODE_REMOVED).show();
+        }
+        else new Alert(Alert.AlertType.ERROR, NODE_NOT_FOUND).show();
+
+        reloadExistingNodes();
     }
 
     /**
@@ -192,6 +211,19 @@ public class GraphBuilderController {
                 alert.show();
             }
         }
+    }
+
+    /**
+     * Verucht einen Knoten anhand des Inputs in die {@link #searchBar} auslesen.
+     * @return Der gefundene Knoten oder null.
+     */
+    private Node getNodeFromSearchBar() {
+        String searchForID = searchBar.getText();
+
+        if (graph.containsKey(searchForID))
+            return graph.get(searchForID);
+
+        return null;
     }
 
     /**
