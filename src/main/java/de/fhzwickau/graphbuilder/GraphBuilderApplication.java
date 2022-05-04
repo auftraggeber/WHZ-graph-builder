@@ -10,6 +10,7 @@ import java.io.IOException;
 public class GraphBuilderApplication extends Application {
 
     private static final String TITLE = "GraphBuilder";
+    private static Stage primaryStage;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -18,6 +19,12 @@ public class GraphBuilderApplication extends Application {
         stage.setTitle(TITLE);
         stage.setScene(scene);
         stage.show();
+
+        primaryStage = stage;
+    }
+
+    public static Stage getPrimaryStage() {
+        return primaryStage;
     }
 
     public static void start() {

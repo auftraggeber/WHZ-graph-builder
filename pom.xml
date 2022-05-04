@@ -166,6 +166,10 @@
                         <configuration>
                             <mainClass>de.fhzwickau.graphmlbuilder/de.fhzwickau.graphbuilder.GraphBuilderApplication
                             </mainClass>
+                            <options>
+                                <option>--add-exports</option>
+                                <option>javafx.base/com.sun.javafx.event=org.controlsfx.controls</option>
+                            </options>
                         </configuration>
                     </execution>
                 </executions>

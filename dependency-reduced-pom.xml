@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.fhzwickau</groupId>
-  <artifactId>GraphMLBuilder</artifactId>
-  <name>GraphMLBuilder</name>
+  <artifactId>GraphBuilder</artifactId>
+  <name>GraphBuilder</name>
   <version>1.0-SNAPSHOT</version>
   <build>
     <plugins>
@@ -70,6 +70,10 @@
             <id>default-cli</id>
             <configuration>
               <mainClass>de.fhzwickau.graphmlbuilder/de.fhzwickau.graphbuilder.GraphBuilderApplication</mainClass>
+              <options>
+                <option>--add-exports</option>
+                <option>javafx.base/com.sun.javafx.event=org.controlsfx.controls</option>
+              </options>
             </configuration>
           </execution>
         </executions>
