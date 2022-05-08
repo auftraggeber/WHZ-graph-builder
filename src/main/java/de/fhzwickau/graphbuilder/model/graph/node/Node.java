@@ -5,16 +5,13 @@ import de.fhzwickau.graphbuilder.model.graph.edge.Edge;
 import de.fhzwickau.graphbuilder.model.metadata.Metadata;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Die Knoten unseres Graphen.
  * Sie halten Metadaten für den Raumfindungsalgorithmus & das UI, die mit {@link Metadata} gekennzeichnet sind.
- * Zudem werden die {@link de.fhzwickau.roomfinder.model.graph.edge.Edge}s zu anderen Knoten hier gehalten.
- * Die Knoten müssen schlussendlich noch einem {@link de.fhzwickau.roomfinder.model.graph.Graph}en zugeordnet werden.
+ * Zudem werden die {@link Edge}s zu anderen Knoten hier gehalten.
+ * Die Knoten müssen schlussendlich noch einem {@link Graph}en zugeordnet werden.
  * @version 0.1.0
  * @since 0.1.0
  * @author Jonas Langner
@@ -104,6 +101,21 @@ public class Node implements Serializable {
 
     public boolean hasPosition() {
         return positionX >= 0 && positionY >= 0;
+    }
+
+    public Set<Edge> getEdges() {
+        return Collections.unmodifiableSet(edges);
+    }
+
+    public boolean addEdge(Edge edge) {
+        for (Edge e : edges) {
+            if (e.getOther(this).equals(edge.getOther(this))) {
+                edges.remove(e);
+                e.getOther(this).edges.remove(e);
+            }
+        }
+
+        return edges.add(edge);
     }
 
     @Override

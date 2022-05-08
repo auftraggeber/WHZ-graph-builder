@@ -2,15 +2,20 @@ package de.fhzwickau.graphbuilder.controller;
 
 import de.fhzwickau.graphbuilder.GraphBuilderApplication;
 import de.fhzwickau.graphbuilder.model.graph.Graph;
+import de.fhzwickau.graphbuilder.model.graph.edge.Edge;
 import de.fhzwickau.graphbuilder.model.graph.node.LazyNode;
 import de.fhzwickau.graphbuilder.model.graph.node.Node;
 import de.fhzwickau.graphbuilder.model.metadata.Metadata;
+import javafx.beans.Observable;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
+import javafx.util.Callback;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 
@@ -38,7 +43,12 @@ public class GraphBuilderController {
             SAVE_ERROR = "Es gab einen unerwarteten Fehler beim Speichern.",
             LOADED = "Der Graph konnte geladen werden.",
             NODE_REMOVED = "Der Knoten konnte entfernt werden.",
-            NODE_ALREADY_EXISTS = "Der Knoten existiert bereits.";
+            NODE_ALREADY_EXISTS = "Der Knoten existiert bereits.",
+            WRONG_WEIGHT_INPUT = "Wählen Sie für das Gewicht eine natürliche Zahl.",
+            WRONG_NODE_ID_INPUT = "Geben Sie gültige IDs für die Knoten an.",
+            EDGE_ALREADY_ADDED = "Diese Kante existiert bereits.",
+            UNKNOWN_ERROR = "Es ist ein unerwarteter Fehler aufgetreten.",
+            EDGE_ADDED = "Die Kante konnte hinzugefügt werden.";
 
     private static final String CHOOSER_EXPORT_TITLE = "Exportieren",
     CHOOSER_IMPORT_TITLE = "Importieren";
@@ -60,10 +70,43 @@ public class GraphBuilderController {
     private TableColumn<Node, String> nodeNameColumn;
 
     @FXML
+    private TableView<Node> linkedNodesTableView;
+    @FXML
+    private TableColumn<Node, String> linkedNodesColumn;
+
+    @FXML
+    private TextField edgeNode1TextField;
+    @FXML
+    private TextField edgeNode2TextField;
+    @FXML
+    private TextField edgeWeightTextField;
+
+    @FXML
     private void initialize() {
         graph = new Graph();
 
-        nodeNameColumn.setCellValueFactory(v -> new SimpleStringProperty(v.getValue().getId()));
+        Callback<TableColumn.CellDataFeatures<Node, String>, ObservableValue<String>> callback =
+                v -> new SimpleStringProperty(v.getValue().getId());
+
+        nodeNameColumn.setCellValueFactory(callback);
+        linkedNodesColumn.setCellValueFactory(callback);
+
+        nodeTableView.getSelectionModel().getSelectedItems().addListener((ListChangeListener<Node>) change -> {
+            linkedNodesTableView.getItems().clear();
+
+            Node selected = nodeTableView.getSelectionModel().getSelectedItem();
+
+            if (selected != null) {
+                List<Node> links = new ArrayList<>();
+
+                for (Edge e : selected.getEdges()) {
+                    links.add(e.getOther(selected));
+                }
+
+                linkedNodesTableView.setItems(FXCollections.observableList(links));
+            }
+
+        });
     }
 
     /**
@@ -224,6 +267,58 @@ public class GraphBuilderController {
         }
     }
 
+    @FXML
+    private void saveEdge() {
+
+        try {
+            Node node1 = getNodeFromString(edgeNode1TextField.getText());
+            Node node2 = getNodeFromString(edgeNode2TextField.getText());
+            int weight = Integer.parseInt(edgeWeightTextField.getText());
+
+            if (weight <= 0) {
+                new Alert(Alert.AlertType.ERROR, WRONG_WEIGHT_INPUT).show();
+            }
+
+            if (node1 != null && node2 != null) {
+                try {
+                    Edge e = new Edge(node1, node2, weight);
+
+                    if (node1.addEdge(e) | node2.addEdge(e)) {
+                        // eine ODER-Verknüpfung, aber falls das erste TRUE ist, wird das 2. trotzdem ausgeführt!
+                        new Alert(Alert.AlertType.CONFIRMATION, EDGE_ADDED).show();
+                    }
+                    else {
+                        new Alert(Alert.AlertType.ERROR, UNKNOWN_ERROR).show();
+                    }
+                }
+                catch (RuntimeException ex) {
+                    new Alert(Alert.AlertType.ERROR, WRONG_NODE_ID_INPUT).show();
+                }
+            }
+            else {
+                new Alert(Alert.AlertType.ERROR, WRONG_NODE_ID_INPUT).show();
+            }
+        } catch (RuntimeException ex) {
+            new Alert(Alert.AlertType.ERROR, WRONG_WEIGHT_INPUT).show();
+        }
+
+    }
+
+    /**
+     * Sucht eine Node, die zu einer Node gehört.
+     * @param id Die ID, die zu einer Node gehört.
+     * @return Gibt die Node oder null zurück.
+     */
+    private Node getNodeFromString(String id) {
+        if (id == null)
+            return null;
+
+        if (graph.containsKey(id))
+            return graph.get(id);
+
+        return null;
+    }
+
     /**
      * Verucht einen Knoten anhand des Inputs in die {@link #searchBar} auslesen.
      * @return Der gefundene Knoten oder null.
@@ -231,10 +326,7 @@ public class GraphBuilderController {
     private Node getNodeFromSearchBar() {
         String searchForID = searchBar.getText();
 
-        if (graph.containsKey(searchForID))
-            return graph.get(searchForID);
-
-        return null;
+        return getNodeFromString(searchForID);
     }
 
     /**
