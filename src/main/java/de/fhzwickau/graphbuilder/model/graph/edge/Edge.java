@@ -1,9 +1,11 @@
 package de.fhzwickau.graphbuilder.model.graph.edge;
 
+import de.fhzwickau.graphbuilder.model.graph.node.LazyNode;
 import de.fhzwickau.graphbuilder.model.graph.node.Node;
 import de.fhzwickau.graphbuilder.model.metadata.Metadata;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * Die Klasse realisiert die Verbindungen (Kanten) zwischen zwei Knoten.
@@ -45,7 +47,6 @@ public class Edge implements Serializable {
         this.weight = weight;
     }
 
-
     /**
      * Gibt den anderen Knoten aus. So erfährt ein Knoten ziemlich einfach, mit wem er überhaupt
      * in Verbindung steht.
@@ -61,5 +62,54 @@ public class Edge implements Serializable {
             return nodes[0];
 
         throw new IllegalArgumentException("This node is not part of the edge. Therefore there is no other participant for this node.");
+    }
+
+    /**
+     * Tauscht eine {@link de.fhzwickau.graphbuilder.model.graph.node.LazyNode} mit einer tatsächlichen Node aus.
+     * @param node Die tatsächlich geladene Node.
+     * @throws IllegalArgumentException Wird geworfen,
+     * falls es sich nicht um eine geladene Node handelt oder die geladene Node nicht an der Kante anliegt.
+     * @throws IllegalStateException Wenn es keine {@link de.fhzwickau.graphbuilder.model.graph.node.LazyNode} an dieser Kante gibt.
+     */
+    public void replaceLazyNodeWith(Node node) throws IllegalArgumentException, IllegalStateException {
+        if (node instanceof LazyNode)
+            throw new IllegalArgumentException("The new node is also a lazynode.");
+
+        boolean lnFound = false;
+
+        for (int i = 0; i < nodes.length; i++) {
+            Node ln = nodes[i];
+
+            if (ln instanceof LazyNode) {
+                lnFound = true;
+
+                if (ln.getId().equals(node.getId())) {
+                    ln.removeEdgeOnlyForThisNode(this);
+
+                    nodes[i] = node;
+
+                    node.addEdge(this);
+
+                    return;
+                }
+            }
+        }
+
+        if (lnFound)
+            throw new IllegalStateException("There is no lazynode.");
+        else
+            throw new IllegalArgumentException("The new node is not part of this edge.");
+    }
+
+    /**
+     * Zerstört die Kante und entfernt sie von den Knoten.
+     */
+    public void destroy() {
+        Arrays.stream(nodes).forEach(n -> n.removeEdgeOnlyForThisNode(this));
+    }
+
+
+    public int getWeight() {
+        return weight;
     }
 }

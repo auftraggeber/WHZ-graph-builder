@@ -118,6 +118,16 @@ public class Node implements Serializable {
         return edges.add(edge);
     }
 
+    /**
+     * Entfernt die Kante nur von diesem Knoten.
+     * Falls die Kante allgemein gelöscht werden soll, {@link Edge#destroy()} verwenden.
+     * @param edge Die Kante, die entfernt werden soll.
+     * @return Gibt an, ob die Kante entfernt werden konnte.
+     */
+    public boolean removeEdgeOnlyForThisNode(Edge edge) {
+        return edges.remove(edge);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
