@@ -108,10 +108,18 @@ public class Node implements Serializable {
     }
 
     public boolean addEdge(Edge edge) {
+        if (edges.contains(edge))
+            return false;
+
+        /*
+        Doppelte Kanten verhindern
+         */
         for (Edge e : edges) {
-            if (e.getOther(this).equals(edge.getOther(this))) {
+            if (e.getOther(this).getId().equals(edge.getOther(this).getId())) {
                 edges.remove(e);
                 e.getOther(this).edges.remove(e);
+                e.getOther(this).addEdge(edge);
+                System.out.println("WARNING: EDGE ALREADY EXISTS: REMOVED THE OLD ONE!");
             }
         }
 
