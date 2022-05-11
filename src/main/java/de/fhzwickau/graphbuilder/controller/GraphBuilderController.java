@@ -85,8 +85,11 @@ public class GraphBuilderController {
     private void initialize() {
         graph = new Graph();
 
-        Callback<TableColumn.CellDataFeatures<Node, String>, ObservableValue<String>> callback =
-                v -> new SimpleStringProperty(v.getValue().getId());
+        Callback<TableColumn.CellDataFeatures<Node, String>, ObservableValue<String>> callback = v -> {
+            String lazyNode = v.getValue() instanceof LazyNode ? " (LazyNode)" : "";
+
+            return new SimpleStringProperty(v.getValue().getId() + lazyNode);
+        };
 
         nodeNameColumn.setCellValueFactory(callback);
         linkedNodesColumn.setCellValueFactory(callback);
@@ -273,29 +276,37 @@ public class GraphBuilderController {
         try {
             Node node1 = getNodeFromString(edgeNode1TextField.getText());
             Node node2 = getNodeFromString(edgeNode2TextField.getText());
+
+            if (node1 == null) {
+                node1 = new LazyNode(edgeNode1TextField.getText());
+                graph.add(node1);
+                reloadExistingNodes();
+            }
+            if (node2 == null) {
+                node2 = new LazyNode(edgeNode2TextField.getText());
+                graph.add(node2);
+                reloadExistingNodes();
+            }
+
             int weight = Integer.parseInt(edgeWeightTextField.getText());
 
             if (weight <= 0) {
                 new Alert(Alert.AlertType.ERROR, WRONG_WEIGHT_INPUT).show();
             }
 
-            if (node1 != null && node2 != null) {
-                try {
-                    Edge e = new Edge(node1, node2, weight);
+            try {
+                Edge e = new Edge(node1, node2, weight);
 
-                    if (node1.addEdge(e) | node2.addEdge(e)) {
-                        // eine ODER-Verknüpfung, aber falls das erste TRUE ist, wird das 2. trotzdem ausgeführt!
-                        new Alert(Alert.AlertType.CONFIRMATION, EDGE_ADDED).show();
-                    }
-                    else {
-                        new Alert(Alert.AlertType.ERROR, UNKNOWN_ERROR).show();
-                    }
+                if (node1.addEdge(e) | node2.addEdge(e)) {
+
+                    // eine ODER-Verknüpfung, aber falls das erste TRUE ist, wird das 2. trotzdem ausgeführt!
+                    new Alert(Alert.AlertType.CONFIRMATION, EDGE_ADDED).show();
                 }
-                catch (RuntimeException ex) {
-                    new Alert(Alert.AlertType.ERROR, WRONG_NODE_ID_INPUT).show();
+                else {
+                    new Alert(Alert.AlertType.ERROR, UNKNOWN_ERROR).show();
                 }
             }
-            else {
+            catch (RuntimeException ex) {
                 new Alert(Alert.AlertType.ERROR, WRONG_NODE_ID_INPUT).show();
             }
         } catch (RuntimeException ex) {
@@ -314,7 +325,7 @@ public class GraphBuilderController {
             return null;
 
         if (graph.containsKey(id))
-            return graph.get(id);
+            return (Node) graph.get(id);
 
         return null;
     }
