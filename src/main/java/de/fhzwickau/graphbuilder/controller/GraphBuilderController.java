@@ -362,7 +362,7 @@ public class GraphBuilderController {
         if (autoCompletionBinding != null)
             autoCompletionBinding.dispose();
 
-        autoCompletionBinding = TextFields.bindAutoCompletion(searchBar, graph.keySet());
+        //autoCompletionBinding = TextFields.bindAutoCompletion(searchBar, graph.keySet());
     }
 
     /**
