@@ -53,7 +53,7 @@
                         <Label layoutX="285.0" layoutY="67.0" text="Gewicht" />
                         <TextField fx:id="edgeWeightTextField" layoutX="228.0" layoutY="84.0" promptText="Gewicht" />
                         <Button layoutX="212.0" layoutY="126.0" mnemonicParsing="false" onAction="#saveEdge" text="Speichern" />
-                        <Button layoutX="331.0" layoutY="126.0" mnemonicParsing="false" text="Entfernen" />
+                        <Button layoutX="331.0" layoutY="126.0" mnemonicParsing="false" onAction="#removeEdge" text="Entfernen" />
                         <Line endX="151.0" layoutX="275.0" layoutY="54.0" startX="-100.0" AnchorPane.leftAnchor="174.5" AnchorPane.rightAnchor="173.5" />
                      </children>
                   </AnchorPane>
