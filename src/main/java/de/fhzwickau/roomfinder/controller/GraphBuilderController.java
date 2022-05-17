@@ -46,7 +46,9 @@ public class GraphBuilderController {
             WRONG_NODE_ID_INPUT = "Geben Sie gültige IDs für die Knoten an.",
             EDGE_ALREADY_ADDED = "Diese Kante existiert bereits.",
             UNKNOWN_ERROR = "Es ist ein unerwarteter Fehler aufgetreten.",
-            EDGE_ADDED = "Die Kante konnte hinzugefügt werden.";
+            EDGE_ADDED = "Die Kante konnte hinzugefügt werden.",
+            EDGE_NOT_FOUND = "Die Kante konnte nicht gefunden werden.",
+            EDGE_REMOVED = "Die Kante konnte entfernt werden.";
 
     private static final String CHOOSER_EXPORT_TITLE = "Exportieren",
     CHOOSER_IMPORT_TITLE = "Importieren";
@@ -311,6 +313,25 @@ public class GraphBuilderController {
             new Alert(Alert.AlertType.ERROR, WRONG_WEIGHT_INPUT).show();
         }
 
+    }
+
+    @FXML
+    private void removeEdge() {
+        Node node1 = getNodeFromString(edgeNode1TextField.getText());
+        Node node2 = getNodeFromString(edgeNode2TextField.getText());
+
+        if (node1 != null && node2 != null) {
+
+            for (Edge e: node1.getEdges()) {
+                if (e.getOther(node1).equals(node2)) {
+                    e.destroy();
+
+                    new Alert(Alert.AlertType.CONFIRMATION,EDGE_REMOVED ).show();
+                    return;
+                }
+            }
+        }
+        new Alert(Alert.AlertType.ERROR, EDGE_NOT_FOUND).show();
     }
 
     /**
