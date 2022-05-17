@@ -1,7 +1,4 @@
-package de.fhzwickau.graphbuilder.model.metadata;
-
-import de.fhzwickau.graphbuilder.model.graph.edge.Edge;
-import de.fhzwickau.graphbuilder.model.graph.node.Node;
+package de.fhzwickau.roomfinder.model.metadata;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,8 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Diese Annotation kennzeichnet ein Metadaten-Objekt für {@link Node} und
- * {@link Edge}.
+ * Diese Annotation kennzeichnet ein Metadaten-Objekt für {@link de.fhzwickau.roomfinder.model.graph.node.Node} und
+ * {@link de.fhzwickau.roomfinder.model.graph.edge.Edge}.
  * Diese werden vor allem für die Reflection-API benötigt: Um den Graphen in einer Datei zu persistieren, wird ein
  * Programm erstellt, in das alle Metadaten eingegeben werden müssen. Das Programm ermittelt anhand der
  * Annotationen, welche Metadaten wie angegeben werden müssen.

@@ -1,4 +1,4 @@
-package de.fhzwickau.graphbuilder;
+package de.fhzwickau.roomfinder;
 
 public class Main {
 

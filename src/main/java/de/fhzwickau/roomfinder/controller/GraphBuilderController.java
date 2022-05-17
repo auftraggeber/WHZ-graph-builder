@@ -1,12 +1,11 @@
-package de.fhzwickau.graphbuilder.controller;
+package de.fhzwickau.roomfinder.controller;
 
-import de.fhzwickau.graphbuilder.GraphBuilderApplication;
-import de.fhzwickau.graphbuilder.model.graph.Graph;
-import de.fhzwickau.graphbuilder.model.graph.edge.Edge;
-import de.fhzwickau.graphbuilder.model.graph.node.LazyNode;
-import de.fhzwickau.graphbuilder.model.graph.node.Node;
-import de.fhzwickau.graphbuilder.model.metadata.Metadata;
-import javafx.beans.Observable;
+import de.fhzwickau.roomfinder.GraphBuilderApplication;
+import de.fhzwickau.roomfinder.model.graph.Graph;
+import de.fhzwickau.roomfinder.model.graph.edge.Edge;
+import de.fhzwickau.roomfinder.model.graph.node.LazyNode;
+import de.fhzwickau.roomfinder.model.graph.node.Node;
+import de.fhzwickau.roomfinder.model.metadata.Metadata;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -17,7 +16,6 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
-import org.controlsfx.control.textfield.TextFields;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -254,10 +252,42 @@ public class GraphBuilderController {
                 FileInputStream fileIn = new FileInputStream(file);
                 ObjectInputStream objectIn = new ObjectInputStream(fileIn);
 
-                Graph temp = (Graph) objectIn.readObject();
+                Object temp = objectIn.readObject();
+                Graph tempGraph = null;
+
+                if (temp instanceof de.fhzwickau.graphbuilder.model.graph.Graph) {
+                    de.fhzwickau.graphbuilder.model.graph.Graph g = (de.fhzwickau.graphbuilder.model.graph.Graph) temp;
+                    int i = 0;
+
+                    System.out.println("VERSUCHE ZU ÜBERSETZEN\n");
+                    System.out.println("KNOTEN: " + g.size());
+
+                    for (de.fhzwickau.graphbuilder.model.graph.node.Node n: g.values()) {
+                        i += n.getEdges().size();
+                    }
+
+                    System.out.println("AUSGEHENDE KANTEN: " + i);
+
+                    tempGraph = new Translator(g).get();
+
+                    System.out.println("\n---------\n\nFERTIG ÜBERSETZT:");
+                    System.out.println("KNOTEN: " + tempGraph.size());
+
+                    i= 0;
+
+                    for (Node node: tempGraph.values()
+                         ) {
+                        i += node.getEdges().size();
+                    }
+
+                    System.out.println("AUSGEHENDE KANTEN: " + i);
+
+                }
+                else tempGraph = (Graph) temp;
+
                 objectIn.close();
 
-                graph.addAll(temp);
+                graph.addAll(tempGraph);
 
                 new Alert(Alert.AlertType.CONFIRMATION, LOADED).show();
 

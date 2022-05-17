@@ -1,8 +1,8 @@
-package de.fhzwickau.graphbuilder.model.graph.edge;
+package de.fhzwickau.roomfinder.model.graph.edge;
 
-import de.fhzwickau.graphbuilder.model.graph.node.LazyNode;
-import de.fhzwickau.graphbuilder.model.graph.node.Node;
-import de.fhzwickau.graphbuilder.model.metadata.Metadata;
+import de.fhzwickau.roomfinder.model.graph.node.LazyNode;
+import de.fhzwickau.roomfinder.model.graph.node.Node;
+import de.fhzwickau.roomfinder.model.metadata.Metadata;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -65,11 +65,11 @@ public class Edge implements Serializable {
     }
 
     /**
-     * Tauscht eine {@link LazyNode} mit einer tatsächlichen Node aus.
+     * Tauscht eine {@link de.fhzwickau.roomfinder.model.graph.node.LazyNode} mit einer tatsächlichen Node aus.
      * @param node Die tatsächlich geladene Node.
      * @throws IllegalArgumentException Wird geworfen,
      * falls es sich nicht um eine geladene Node handelt oder die geladene Node nicht an der Kante anliegt.
-     * @throws IllegalStateException Wenn es keine {@link LazyNode} an dieser Kante gibt.
+     * @throws IllegalStateException Wenn es keine {@link de.fhzwickau.roomfinder.model.graph.node.LazyNode} an dieser Kante gibt.
      */
     public void replaceLazyNodeWith(Node node) throws IllegalArgumentException, IllegalStateException {
         if (node instanceof LazyNode)

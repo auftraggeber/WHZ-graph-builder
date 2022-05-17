@@ -119,13 +119,13 @@
                         <configuration>
                             <artifactSet>
                                 <excludes>
-                                    <exclude>de.fhzwickau.graphbuilder.Main</exclude>
+                                    <exclude>de.fhzwickau.roomfinder.Main</exclude>
                                 </excludes>
                             </artifactSet>
                             <transformers>
                                 <!-- add Main-Class to manifest file -->
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>de.fhzwickau.graphbuilder.Main</mainClass>
+                                    <mainClass>de.fhzwickau.roomfinder.Main</mainClass>
                                 </transformer>
                             </transformers>
                             <filters>
@@ -150,7 +150,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>de.fhzwickau.graphbuilder.Main</mainClass>
+                            <mainClass>de.fhzwickau.roomfinder.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -164,7 +164,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>de.fhzwickau.graphmlbuilder/de.fhzwickau.graphbuilder.GraphBuilderApplication
+                            <mainClass>de.fhzwickau.graphmlbuilder/de.fhzwickau.roomfinder.GraphBuilderApplication
                             </mainClass>
                             <options>
                                 <option>--add-exports</option>
