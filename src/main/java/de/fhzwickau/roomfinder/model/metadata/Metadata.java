@@ -1,4 +1,4 @@
-package de.fhzwickau.graphbuilder.model.metadata;
+package de.fhzwickau.roomfinder.model.metadata;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

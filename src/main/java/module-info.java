@@ -10,8 +10,8 @@ module de.fhzwickau.graphmlbuilder {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
 
-    opens de.fhzwickau.graphbuilder to javafx.fxml;
-    exports de.fhzwickau.graphbuilder;
-    exports de.fhzwickau.graphbuilder.controller;
-    opens de.fhzwickau.graphbuilder.controller to javafx.fxml;
+    opens de.fhzwickau.roomfinder to javafx.fxml;
+    exports de.fhzwickau.roomfinder;
+    exports de.fhzwickau.roomfinder.controller;
+    opens de.fhzwickau.roomfinder.controller to javafx.fxml;
 }

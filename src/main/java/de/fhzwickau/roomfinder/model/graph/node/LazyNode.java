@@ -1,6 +1,6 @@
-package de.fhzwickau.graphbuilder.model.graph.node;
+package de.fhzwickau.roomfinder.model.graph.node;
 
-import de.fhzwickau.graphbuilder.model.graph.node.listener.LazyNodeListener;
+import de.fhzwickau.roomfinder.model.graph.node.listener.LazyNodeListener;
 
 import java.io.Serializable;
 

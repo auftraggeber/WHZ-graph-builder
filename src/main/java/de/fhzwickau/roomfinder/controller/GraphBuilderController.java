@@ -1,12 +1,11 @@
-package de.fhzwickau.graphbuilder.controller;
+package de.fhzwickau.roomfinder.controller;
 
-import de.fhzwickau.graphbuilder.GraphBuilderApplication;
-import de.fhzwickau.graphbuilder.model.graph.Graph;
-import de.fhzwickau.graphbuilder.model.graph.edge.Edge;
-import de.fhzwickau.graphbuilder.model.graph.node.LazyNode;
-import de.fhzwickau.graphbuilder.model.graph.node.Node;
-import de.fhzwickau.graphbuilder.model.metadata.Metadata;
-import javafx.beans.Observable;
+import de.fhzwickau.roomfinder.GraphBuilderApplication;
+import de.fhzwickau.roomfinder.model.graph.Graph;
+import de.fhzwickau.roomfinder.model.graph.edge.Edge;
+import de.fhzwickau.roomfinder.model.graph.node.LazyNode;
+import de.fhzwickau.roomfinder.model.graph.node.Node;
+import de.fhzwickau.roomfinder.model.metadata.Metadata;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -17,7 +16,6 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
-import org.controlsfx.control.textfield.TextFields;
 
 import java.io.*;
 import java.lang.reflect.Field;

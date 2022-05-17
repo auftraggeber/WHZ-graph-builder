@@ -1,8 +1,8 @@
-package de.fhzwickau.graphbuilder.model.graph;
+package de.fhzwickau.roomfinder.model.graph;
 
-import de.fhzwickau.graphbuilder.model.graph.node.LazyNode;
-import de.fhzwickau.graphbuilder.model.graph.node.Node;
-import de.fhzwickau.graphbuilder.model.graph.node.listener.LazyNodeListener;
+import de.fhzwickau.roomfinder.model.graph.node.LazyNode;
+import de.fhzwickau.roomfinder.model.graph.node.Node;
+import de.fhzwickau.roomfinder.model.graph.node.listener.LazyNodeListener;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -62,7 +62,7 @@ public class Graph extends HashMap<String, Node> implements Serializable {
     }
 
     /**
-     * Fügt mehrere Knoten hinzu. Arbeitet damit mit {@link #add(de.fhzwickau.graphbuilder.model.graph.node.Node)}.
+     * Fügt mehrere Knoten hinzu. Arbeitet damit mit {@link #add(de.fhzwickau.roomfinder.model.graph.node.Node)}.
      * @param nodes Die Knoten die hinzugefügt werden sollen.
      */
     public void addAll(Collection<Node> nodes) {

@@ -1,8 +1,8 @@
-package de.fhzwickau.graphbuilder.model.graph.node;
+package de.fhzwickau.roomfinder.model.graph.node;
 
-import de.fhzwickau.graphbuilder.model.graph.Graph;
-import de.fhzwickau.graphbuilder.model.graph.edge.Edge;
-import de.fhzwickau.graphbuilder.model.metadata.Metadata;
+import de.fhzwickau.roomfinder.model.graph.Graph;
+import de.fhzwickau.roomfinder.model.graph.edge.Edge;
+import de.fhzwickau.roomfinder.model.metadata.Metadata;
 
 import java.io.Serializable;
 import java.util.*;
