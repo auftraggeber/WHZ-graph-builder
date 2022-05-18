@@ -44,6 +44,9 @@ public class Node implements Serializable {
     @Metadata(description = "Gibt an, ob der Knoten als Ziel ausgewählt werden darf.")
     protected boolean asTarget;
 
+    @Metadata(description = "Gibt an, ob der Knoten ein Toilettenknoten ist")
+    protected boolean isToilet;
+
     public Node() {
         id = UUID.randomUUID().toString(); // Verhindern eines nullpointers
         edges = new HashSet<>();
@@ -55,6 +58,7 @@ public class Node implements Serializable {
         positionX = -1;
         positionY = -1;
         asTarget = false;
+        isToilet = false;
     }
 
     public void setGraph(Graph graph) {
@@ -90,6 +94,10 @@ public class Node implements Serializable {
 
     public boolean asTarget() {
         return asTarget;
+    }
+
+    public boolean isToilet() {
+        return isToilet;
     }
 
     public boolean hasDisplayName() {
