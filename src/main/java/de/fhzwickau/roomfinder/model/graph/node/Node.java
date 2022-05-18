@@ -6,6 +6,7 @@ import de.fhzwickau.roomfinder.model.metadata.Metadata;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Die Knoten unseres Graphen.
@@ -114,13 +115,13 @@ public class Node implements Serializable {
         /*
         Doppelte Kanten verhindern
          */
-        for (Edge e : edges) {
-            if (e.getOther(this).getId().equals(edge.getOther(this).getId())) {
-                edges.remove(e);
-                e.getOther(this).edges.remove(e);
-                e.getOther(this).addEdge(edge);
-                System.out.println("WARNING: EDGE ALREADY EXISTS: REMOVED THE OLD ONE!");
-            }
+        Set<Edge> toRemove = edges.stream().filter(e -> e.getOther(this).getId().equals(edge.getOther(this).getId())).collect(Collectors.toSet());
+
+        for (Edge e : toRemove) {
+            edges.remove(e);
+            e.getOther(this).edges.remove(e);
+            e.getOther(this).addEdge(edge);
+            //System.out.println("WARNING: EDGE ALREADY EXISTS: REMOVED THE OLD ONE!");
         }
 
         return edges.add(edge);
@@ -129,6 +130,7 @@ public class Node implements Serializable {
     /**
      * Entfernt die Kante nur von diesem Knoten.
      * Falls die Kante allgemein gelöscht werden soll, {@link Edge#destroy()} verwenden.
+     *
      * @param edge Die Kante, die entfernt werden soll.
      * @return Gibt an, ob die Kante entfernt werden konnte.
      */

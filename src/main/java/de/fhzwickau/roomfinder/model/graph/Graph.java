@@ -47,6 +47,14 @@ public class Graph extends HashMap<String, Node> implements Serializable {
             if ((old instanceof LazyNode) && !(node instanceof LazyNode)) {
                 listeners.forEach(l -> l.onCompleteNodeLoaded((LazyNode) old, node));
             }
+            else if (!(old instanceof LazyNode) && (node instanceof LazyNode)) {
+                LazyNodeListener listener = (LazyNodeListener) node;
+
+                listeners.add(listener);
+                listeners.forEach(l -> l.onCompleteNodeLoaded((LazyNode) node, old));
+                listeners.remove(listener);
+                return;
+            }
 
             remove(old);
         }
