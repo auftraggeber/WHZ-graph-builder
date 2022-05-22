@@ -1,5 +1,6 @@
 package de.fhzwickau.roomfinder.model.graph.node;
 
+import de.fhzwickau.roomfinder.model.ToiletType;
 import de.fhzwickau.roomfinder.model.graph.Graph;
 import de.fhzwickau.roomfinder.model.graph.edge.Edge;
 import de.fhzwickau.roomfinder.model.metadata.Metadata;
@@ -44,8 +45,8 @@ public class Node implements Serializable {
     @Metadata(description = "Gibt an, ob der Knoten als Ziel ausgewählt werden darf.")
     protected boolean asTarget;
 
-    @Metadata(description = "Gibt an, ob der Knoten ein Toilettenknoten ist")
-    protected boolean isToilet;
+    @Metadata(description = "0 = Keine Toilette, 1 = WC Herren, 2 = WC Damen, 3 = WC Barrierefrei")
+    protected byte toiletType;
 
     public Node() {
         id = UUID.randomUUID().toString(); // Verhindern eines nullpointers
@@ -58,7 +59,7 @@ public class Node implements Serializable {
         positionX = -1;
         positionY = -1;
         asTarget = false;
-        isToilet = false;
+        toiletType = 0;
     }
 
     public void setGraph(Graph graph) {
@@ -96,8 +97,8 @@ public class Node implements Serializable {
         return asTarget;
     }
 
-    public boolean isToilet() {
-        return isToilet;
+    public boolean isToilet(ToiletType type) {
+        return this.toiletType == type.getId();
     }
 
     public boolean hasDisplayName() {
