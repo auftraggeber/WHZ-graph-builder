@@ -487,6 +487,9 @@ public class GraphBuilderController {
         else if (field.getType().equals(boolean.class) || field.getType().equals(Boolean.class)) {
             return Boolean.parseBoolean(value);
         }
+        else if (field.getType().equals(byte.class) || field.getType().equals(Byte.class)) {
+            return Byte.parseByte(value);
+        }
 
         return null;
     }
