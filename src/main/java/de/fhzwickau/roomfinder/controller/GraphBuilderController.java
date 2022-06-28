@@ -19,10 +19,7 @@ import org.controlsfx.control.textfield.AutoCompletionBinding;
 
 import java.io.*;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Die Klasse, die die Eingaben des UIs in das Modell überträgt.
@@ -48,7 +45,9 @@ public class GraphBuilderController {
             UNKNOWN_ERROR = "Es ist ein unerwarteter Fehler aufgetreten.",
             EDGE_ADDED = "Die Kante konnte hinzugefügt werden.",
             EDGE_NOT_FOUND = "Die Kante konnte nicht gefunden werden.",
-            EDGE_REMOVED = "Die Kante konnte entfernt werden.";
+            EDGE_REMOVED = "Die Kante konnte entfernt werden.",
+            QUESTION_REMOVE_DISPLAY_NAME = "Soll der Name von Knoten \"%1%\": \"%2%\" entfernt werden?",
+            QUESTION_REMOVE_DISPLAY_NAME_TITLE = "Namen entfernen?";
 
     private static final String CHOOSER_EXPORT_TITLE = "Exportieren",
     CHOOSER_IMPORT_TITLE = "Importieren";
@@ -268,6 +267,8 @@ public class GraphBuilderController {
                 alert.show();
             }
         }
+
+        checkDisplayNames();
     }
 
     @FXML
@@ -492,6 +493,43 @@ public class GraphBuilderController {
         }
 
         return null;
+    }
+
+    /**
+     * Fragt den Nutzer für jeden Knoten, ob der Anzeigename gelöscht werden soll.
+     */
+    private void checkDisplayNames() {
+        for (Node node: graph.values()) {
+            if (node instanceof LazyNode)
+                continue;
+
+
+            if (node.hasDisplayName()) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle(QUESTION_REMOVE_DISPLAY_NAME_TITLE);
+                alert.setContentText(QUESTION_REMOVE_DISPLAY_NAME.replace("%1%", node.getId()).replace("%2%", node.getDisplayName()));
+                alert.getButtonTypes().clear();
+                alert.getButtonTypes().addAll(ButtonType.NO, ButtonType.YES);
+                ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
+
+                String dName = node.getDisplayName();
+
+                if (result.equals(ButtonType.YES)) {
+
+                    try {
+                        Field dNameField = node.getClass().getDeclaredField("displayName");
+                        dNameField.setAccessible(true);
+                        dNameField.set(node, "");
+                        dNameField.setAccessible(false);
+                    }
+                    catch (NoSuchFieldException | IllegalAccessException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+
+                System.out.println(node.getId() + ": " + "ALT: \"" + dName + "\" - NEU: \"" + node.getDisplayName() + "\"");
+            }
+        }
     }
 
 }
